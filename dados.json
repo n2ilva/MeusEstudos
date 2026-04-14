@@ -1,0 +1,36 @@
+{
+  "usuarios": [
+    { "id": 1, "nome": "Ana Silva" },
+    { "id": 2, "nome": "Bruno Oliveira" },
+    { "id": 3, "nome": "Carlos Santos" },
+    { "id": 4, "nome": "Daniela Lima" },
+    { "id": 5, "nome": "Eduardo Sousa" },
+    { "id": 6, "nome": "Fernanda Costa" },
+    { "id": 7, "nome": "Gabriel Pereira" },
+    { "id": 8, "nome": "Helena Rodrigues" },
+    { "id": 9, "nome": "Igor Martins" },
+    { "id": 10, "nome": "Julia Almeida" },
+    { "id": 11, "nome": "Kevin Barbosa" },
+    { "id": 12, "nome": "Larissa Gomes" },
+    { "id": 13, "nome": "Mauricio Ferreira" },
+    { "id": 14, "nome": "Natalia Carvalho" },
+    { "id": 15, "nome": "Otavio Mendes" }
+  ],
+  "salarios": [
+    { "id": 1, "valor": 3500 },
+    { "id": 2, "valor": 4200 },
+    { "id": 3, "valor": 2800 },
+    { "id": 4, "valor": 5100 },
+    { "id": 5, "valor": 3900 },
+    { "id": 6, "valor": 4500 },
+    { "id": 7, "valor": 3200 },
+    { "id": 8, "valor": 6000 },
+    { "id": 9, "valor": 2900 },
+    { "id": 10, "valor": 4800 },
+    { "id": 11, "valor": 3700 },
+    { "id": 12, "valor": 5500 },
+    { "id": 13, "valor": 3100 },
+    { "id": 14, "valor": 4300 },
+    { "id": 15, "valor": 5200 }
+  ]
+}
