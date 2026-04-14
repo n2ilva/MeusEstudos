@@ -1,0 +1,90 @@
+/* style.css */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #121212;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.calculadora {
+    background-color: #1e1e1e;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    width: 320px;
+}
+
+h1 {
+    color: #fff;
+    text-align: center;
+    font-weight: 300;
+}
+
+#display-container {
+    background-color: #2d2d2d;
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    text-align: right;
+    min-height: 50px;
+}
+
+#resultado {
+    color: #00ff88;
+    font-size: 2.5rem;
+    margin: 0;
+    word-wrap: break-word;
+}
+
+.grade-botoes {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+
+button {
+    height: 60px;
+    border-radius: 12px;
+    border: none;
+    font-size: 1.25rem;
+    font-weight: bold;
+    cursor: pointer;
+    background-color: #333;
+    color: #fff;
+    transition: all 0.2s ease;
+}
+
+button:hover {
+    background-color: #444;
+    transform: translateY(-2px);
+}
+
+button:active {
+    transform: translateY(1px);
+}
+
+/* Cores especiais para operadores */
+button:nth-child(4n), button.igual {
+    background-color: #ff9500;
+}
+
+button:nth-child(4n):hover, button.igual:hover {
+    background-color: #ffaa33;
+}
+
+button.limpar {
+    background-color: #ff3b30;
+    grid-column: span 2;
+}
+
+button.limpar:hover {
+    background-color: #ff5544;
+}
+
+button.igual {
+    grid-column: span 2;
+    background-color: #007aff;
+}

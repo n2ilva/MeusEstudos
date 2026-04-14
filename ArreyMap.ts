@@ -1,5 +1,5 @@
 
-import { nomes, numeros, nomesObjetos, numerosObjetos } from "./listaArrey.js";
+import { nomesObjetos, numerosObjetos } from "./listaArrey.js";
 
 /*
 //Filter para achar nomes duplicados (Modo Simples)
@@ -22,7 +22,7 @@ for (const nome of nomes) {
 console.log(nomesDuplicadosMap);
 
 // Verificar se um nome existe no Map
-const acharNome = (nome) => {
+const acharNome = (nome: string) => {
   if (nomesDuplicadosMap.has(nome)) {
     return `O nome ${nome} existe no Map`;
   } else {
@@ -33,7 +33,7 @@ const acharNome = (nome) => {
 console.log(acharNome("Ana"));
 
 // Verificar quantas vezes um nome existe no Map
-const contarNome = (nome) => {
+const contarNome = (nome: string) => {
   if (nomesDuplicadosMap.has(nome)) {
     return `O nome ${nome} existe no Map ${nomesDuplicadosMap.get(nome)} vezes`;
   } else {

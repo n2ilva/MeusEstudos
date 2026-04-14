@@ -1,12 +1,3 @@
-
-// 1. Array de 15 nomes (contendo duplicatas)
-export const nomes = [
-  "Ana", "Carlos", "Alice", "Beatriz", "Ana", 
-  "Daniela", "Alice", "Eduardo", "Beatriz", "Ana", 
-  "Gabriel", "Helena", "Alice", "Igor", "Julia"
-];
-
-// 2. Array de nomes em formato de objeto
 export const nomesObjetos = [
   { nome: "Ana", idade: 20, id: 1 },
   { nome: "Carlos", idade: 25, id: 2 },
@@ -25,10 +16,6 @@ export const nomesObjetos = [
   { nome: "Julia", idade: 21, id: 15 }
 ];
 
-// 3. Array de 15 números aleatórios
-export const numeros = [45, 12, 89, 34, 45, 67, 12, 90, 11, 45, 78, 33, 21, 56, 89];
-
-// 4. Array de números em formato de objeto
 export const numerosObjetos = [
   { valor: 45, id: 1 },
   { valor: 12, id: 2 },
