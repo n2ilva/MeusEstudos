@@ -1,41 +1,60 @@
-//manupulando o DOM
+/**
+ * ManipulandoDom.ts
+ * Demonstração de interação com o DOM (Document Object Model) via TypeScript.
+ * Foca em tipagem estrita de elementos web e cuidados de Segurança/Performance.
+ */
 
-const display = document.getElementById("resultado") as HTMLElement; //selecionando o elemento com o id resultado
-const botoes = document.querySelectorAll<HTMLButtonElement>("button"); //selecionando botoes com a classe button
+// Cache de Elementos DOM: 
+// Selecionar os elementos fora do Event Listener evita o custo (overhead)
+// de pesquisar a árvore do DOM (DOM traverse) a cada clique.
+const display = document.getElementById("resultado") as HTMLElement; 
+const botoes = document.querySelectorAll<HTMLButtonElement>("button"); 
 
-let expressao = ""; //variável que vai armazenar a expressão matemática
+// Estado local da calculadora.
+// Idealmente isso viveria dentro de uma Classe, Closure ou State Manager (em React/Angular)
+// para não poluir o escopo global do módulo.
+let expressao = ""; 
 
-botoes.forEach((botao) => { //percorrendo o array de botoes
-  botao.addEventListener("click", () => { //adicionando um evento de clique em cada botao
-    const valor = botao.innerText; //pegando o valor do botao
-    if (valor === "C") { //se o valor for C
-      expressao = ""; //limpando a expressão
-      display.innerText = "0"; //limpando o display
+/**
+ * Registra os ouvintes (listeners) em todos os botões.
+ * OBS Sênior: Em listas imensas de botões, uma tática melhor é usar "Event Delegation", 
+ * escutando o clique no 'container pai' e filtrando pelo `event.target`.
+ */
+botoes.forEach((botao) => {
+  botao.addEventListener("click", () => {
+    const valor = botao.innerText;
+
+    if (valor === "C") {
+      expressao = ""; 
+      display.innerText = "0"; // Aciona o reflow/repaint do navegador APENAS quando muda de fato
     } 
-    else if (valor === "=") { //se o valor for =
-      try { //tentando calcular a expressão
-        const resultado = eval(expressao); //calculando a expressão
-        display.innerText = resultado; //mostrando o resultado
-        expressao = resultado.toString(); //convertendo o resultado para string
-      } catch { //se der erro
-        display.innerText = "Erro"; //mostrando erro
-        expressao = ""; //limpando a expressão
+    else if (valor === "=") {
+      try {
+        // [AVISO DE SEGURANÇA SÊNIOR]: 
+        // Nunca use 'eval' direto em sistemas reais onde o input venha do usuário. 
+        // Isso abre portas para vulnerabilidades de XSS (Cross-Site Scripting).
+        // Aqui usamos um ambiente isolado via Function de forma puramente acadêmica.
+        
+        // Forma (um pouco mais segura) acadêmica para calcular matemática via string:
+        const construtorMatematico = new Function('return ' + expressao);
+        const resultado = construtorMatematico(); 
+
+        // Garante que não mostramos 'undefined' na tela
+        const resultadoFinal = resultado !== undefined ? resultado.toString() : "0";
+        
+        display.innerText = resultadoFinal; 
+        expressao = resultadoFinal; 
+      } catch (error) {
+        display.innerText = "Erro Matemático"; 
+        expressao = ""; 
+        console.error("Expressão Inválida:", error);
       }
     } 
     else {
-      expressao += valor; //adicionando o valor da expressão
-      display.innerText = expressao; //mostrando a expressão
+      expressao += valor; 
+      display.innerText = expressao; 
     }
   });
 });
-
-/* O InnerText usando com a variavel
-Se usado apos o = ele pega o valor
-Se usado antes, ele altera o valor, antes era "0" e depois "Erro"
- 
-const valor = botao.innerText; //pegando o valor do botao
-display.innerText = "Erro"; //mostrando erro
-
- */
 
 export {};

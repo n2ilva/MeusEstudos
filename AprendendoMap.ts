@@ -1,62 +1,69 @@
-/* 
-  O QUE É O OBJETO MAP?
-  Ele é uma coleção de pares chave-valor. Parece um objeto {}, mas é mais poderoso.
-*/
+/**
+ * AprendendoMap.ts
+ * 
+ * O Objeto Map no JavaScript/TypeScript foi introduzido no ES6+ para solucionar as deficiências 
+ * do Objeto padrão ({}) quando usado como Dicionário (Hash Table).
+ * 
+ * Vantagens do Map Sênior:
+ * 1. Chaves podem ser de QUALQUER tipo (Objetos, Funções, Primitivos), não só Strings.
+ * 2. Garante a ORDEM de inserção na hora da iteração (Diferente do `{}`).
+ * 3. Possui a propriedade iterável nativa (`.size`), sem precisar de `Object.keys().length`.
+ * 4. Altíssima performance e alocação de memória (V8 Engine) para adições e remoções frequentes (O(1)).
+ */
 
 import { numerosObjetos, nomesObjetos } from "./listaArrey.js";
 
-// numerosObjetos é um Array (uma lista).
-// Arrays não possuem os métodos .set(), .get(), .has() ou .delete(). 
-// Esses métodos pertencem exclusivamente ao objeto "Map".
+// ============================================================================
+// 1. Instanciação e Métodos Primitivos O(1)
+// ============================================================================
+const meuMapa = new Map<string, string | number | boolean>();
 
-// Para usar esses métodos, precisamos criar um Map:
-const meuMapa = new Map();
+meuMapa.set("valor", 100); // Aloca no Heap de forma otimizada
+console.log("Get valor da chave:", meuMapa.get("valor")); // O(1) lookup
+console.log("A chave existe?", meuMapa.has("valor")); // O(1) verify
+meuMapa.delete("valor"); // Libera para Garbage Collection
 
-meuMapa.set("valor", 100); // Adiciona um par chave-valor
+// ============================================================================
+// 2. Mapas Relacionais (Simulando uma Engine em Memória)
+// ============================================================================
 
-console.log(meuMapa.get("valor")); // Busca o valor da chave "valor" (vai retornar 100)
-
-console.log(meuMapa.has("valor")); // Verifica se a chave existe (vai retornar true)
-
-meuMapa.delete("valor"); // Remove a chave "valor"
-
-// ----------------------------------------------------
-// Se você quiser transformar o Array `numerosObjetos` em um Map:
-// Podemos usar o "id" de cada item como a CHAVE, e o objeto inteiro como o VALOR.
+// Aqui utilizamos uma tupla `[chave, valor]` para injetar dados no construtor do Map.
 const mapaDeNumeros = new Map(
-  numerosObjetos.map(item => [item.id, item])
+  numerosObjetos.map(item => [item.id, item] as const)
 );
 
-// Agora sim você pode usar os métodos do Map nessa nova variável:
-console.log(mapaDeNumeros.get(1)); // Busca o objeto que tem o id 1
-console.log(mapaDeNumeros.has(5)); // Verifica se existe alguém com id 5
+// Consulta direta de forma extremamente veloz e segura
+console.log("Busca rápida (Id 1):", mapaDeNumeros.get(1)); 
 
-
-// Unir dois Map
-
+// ============================================================================
+// 3. Estratégia Avançada de Merge (Inner/Hash Join)
+// ============================================================================
 const mapaDeNomes = new Map(
-  nomesObjetos.map(item => [item.id, item])
+  nomesObjetos.map(item => [item.id, item] as const)
 );
 
-// Se você usar new Map([...map1, ...map2]), as chaves do map2 vão apenas 
-// sobrescrever e apagar as chaves do map1 (porque ambas têm os mesmos IDs).
-// Para unir o CONTEÚDO dos dois pelo ID, você deve combiná-los em um novo Map:
-
+/**
+ * Por que não podemos usar `new Map([...map1, ...map2])`?
+ * Se os dois Maps compartilharem as mesmas chaves (Collision), a sintaxe do Spread (...) 
+ * simplesmente aceita o último que entrou para sobrescrever (overwrite) e apaga o anterior.
+ * 
+ * A estratégia sênior para isso é iterar um deles e compor os objetos internamente.
+ */
 const mapaUnido = new Map();
 
 for (const [id, dadosDeNome] of mapaDeNomes) {
-  // Pega o objeto de número que tem o mesmo ID
+  // Padrão de Data Aggregation
   const dadosDeNumero = mapaDeNumeros.get(id);
 
-  // Cria um novo registro juntando os dados de Nome + os dados de Número
+  // Deep clone indireto de propriedades do 1º nível usando Spread (...)
+  // Evitando a mutação da fonte original dos dados.
   mapaUnido.set(id, {
-    ...dadosDeNome, // Copia { nome: "Ana", idade: 20, id: 1 }
-    ...dadosDeNumero // Copia { valor: 45, id: 1 } (vai sobrepor apenas o id, que é o mesmo)
+    ...dadosDeNome,  
+    ...dadosDeNumero 
   });
 }
 
-console.log("Exibindo todos juntos:", mapaUnido);
-console.log("Apenas o usuário de ID 1:", mapaUnido.get(1));
+console.log("Head (ID 1) da Tabela Agregada:", mapaUnido.get(1));
 
 
 

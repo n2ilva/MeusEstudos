@@ -1,47 +1,71 @@
+/**
+ * ArreySimples.ts
+ * Demonstração de métodos primitivos de Array (map, sort, find, splice)
+ * com aplicação de boas práticas de organização e imutabilidade.
+ */
+
 const numeros: number[] = [1, 4, 2, 3, 5];
 const pratos: string[] = ["Feijoada", "Macarrao", "Bife", "Arroz", "Feijao"];
 
-/* Usamos o map para criar um novo array com os valores do array original
-const cardapio = array.map((valor, index) => {
-  return {
-    number: valor,
-    name: array2[index]
-  };
-});
+// =========================================================
+// 1. Transformação de Arrays (Imutável)
+// =========================================================
 
-const newCardapio = cardapio.sort((a, b) => a.number - b.number);
-console.log(newCardapio); */
+/**
+ * Criação de um menu formatado utilizando .map()
+ * Time Complexity (Tempo): O(N) onde N é o tamanho do array.
+ */
+const cardapioFormatado = numeros.map((id, index) => ({
+  id,                   // Shorthand syntax para id: id
+  nome: pratos[index]   // Realiza o "match" entre o index da lista de números e pratos
+}));
 
+// Diferente do .map(), o método .sort() muta o array original em ES6-, 
+// portanto usamos o Spread Operator [...array] para gerar uma cópia segura e imutável.
+const cardapioOrdenado = [...cardapioFormatado].sort((a, b) => a.id - b.id);
 
-/* Juntando arreys em dois arreys na mesma lista.
-const juntandoArrays = [[...numeros.sort((a, b) => a - b)], [...pratos.sort()]];
-console.log(juntandoArrays); */
-
-
-/* Ordenando o array e multiplicando cada valor por 2.
-const numerosAlterados = numeros.sort((a, b) => a - b).map((numero) => {
-  return numero * 2;
-});
-
-console.log(numerosAlterados); */
+console.log("Cardápio Ordenado:", cardapioOrdenado);
 
 
-/* Encontrando um nome no array.
-const encontrarNome = pratos.find((prato) => prato === "Bife");
-console.log("Nome encontrado: ", encontrarNome); */
+// =========================================================
+// 2. Composição e Manipulação Numérica
+// =========================================================
+
+// Cria uma matriz bidimensional juntando os dois arrays, com ambas as listas já ordenadas.
+const agrupamentoMatriz = [
+  [...numeros].sort((a, b) => a - b), // Ordem Numérica ASC
+  [...pratos].sort()                  // Ordem Alfabética ASC
+];
+console.log("Agrupamento de Matriz (Tupla/Array 2D):", agrupamentoMatriz);
+
+// Chaining (Encadeamento) de Métodos Funcionais 
+// Organiza, dobra os valores e retorna a nova lista limpa.
+const numerosDobradosEOrdenados = [...numeros]
+  .sort((a, b) => a - b)
+  .map(numero => numero * 2);
+
+console.log("Números em Cadeia:", numerosDobradosEOrdenados);
 
 
+// =========================================================
+// 3. Busca e Alteração Avançada
+// =========================================================
 
-/* Encontrando o index de um nome no array.
-const encontrarIndex = pratos.findIndex((prato) => prato === "Bife");
-console.log("Index encontrado: ", encontrarIndex); */
+const pratoBuscado = "Bife";
 
+// .find() é eficiente porque retorna assim que acha o primeiro 'match' (Early return) O(N)
+const pratoEncontrado = pratos.find(prato => prato === pratoBuscado);
+console.log("Busca de prato:", pratoEncontrado || "Prato indisponível");
 
-/* Splice primeiro numero é o index, segundo é a quantidade de remoção,
-terceiro item ou mais seria para substituir o item removido.
-numeros.splice(0,1,7);
-console.log(numeros);
-*/
+// .findIndex() acha a posição na memória no array.
+const indexOfPrato = pratos.findIndex(prato => prato === pratoBuscado);
 
+// Se existir no array (índice diferente de -1), deleta com Slice/Splice
+if (indexOfPrato !== -1) {
+  // ATENÇÃO: .splice() é destrutivo. Modifica o array 'pratos' na hora.
+  const itemRemovido = pratos.splice(indexOfPrato, 1, "Sushi"); // Subsitui o Bife por Sushi
+  console.log(`Prato removido pelo Chef: ${itemRemovido}. Substituído por Sushi.`);
+  console.log("Menu atualizado:", pratos);
+}
 
 export {};

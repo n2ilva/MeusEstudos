@@ -1,4 +1,7 @@
-//Interface para criar a base de um obejo que pode ser reutilizado em outros objetos
+/**
+ * A interface `Veiculo` define um contrato rígido para as classes que a implementarem.
+ * Isso garante que a camada de domínio tenha consistência no formato dos objetos (Design by Contract).
+ */
 interface Veiculo {
   marca: string;
   modelo: string;
@@ -7,26 +10,41 @@ interface Veiculo {
   desligar(): void;
 }
 
-//Classe que implementa a interface Veiculo
+/**
+ * A classe `Carro` implementa o contrato `Veiculo`.
+ * A adoção do modificador "public" direto no construtor (Sintaxe de Parameter Properties)
+ * reduz boilerplate de atribuição de variáveis de classe.
+ */
 class Carro implements Veiculo {
   constructor(
     public marca: string,
     public modelo: string,
-    public ano: number
+    public readonly ano: number // `readonly` evita que o ano de fabricação seja modificado indevidamente no futuro.
   ) {}
-//Métodos que implementam a interface Veiculo, a classe carro é obrigada a ter esses métodos
+
+  /**
+   * Inicializa o motor do veículo.
+   */
   ligar(): void {
-    console.log(`O ${this.modelo} está ligando...`);
+    console.log(`[Sistema]: O ${this.marca} ${this.modelo} está iniciando o motor...`);
   }
 
+  /**
+   * Encerra as operações do veículo.
+   */
   desligar(): void {
-    console.log(`O ${this.modelo} está desligando...`);
+    console.log(`[Sistema]: O ${this.marca} ${this.modelo} foi desligado em segurança.`);
   }
 }
 
-//Instanciando a classe Carro
+// ------------------------------------------------------------------
+// Exemplo de Injeção / Utilização da Instância
+// ------------------------------------------------------------------
+
+// Tipando a variável estritamente como a interface, garantindo o "Liskov Substitution Principle"
 const meuCarro: Veiculo = new Carro("Toyota", "Corolla", 2022);
-console.log(meuCarro);
+
+console.dir(meuCarro);
 meuCarro.ligar();
 meuCarro.desligar();
 

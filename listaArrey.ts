@@ -1,4 +1,28 @@
-export const nomesObjetos = [
+/**
+ * listaArrey.ts
+ * Repositório central de dados (Mocks).
+ * Utilização de Tipagem Estrita (Interfaces) para garantir a consistência do contrato de dados.
+ */
+
+export interface Pessoa {
+  id: number;
+  nome: string;
+  idade: number;
+}
+
+export interface Financeiro {
+  id: number;
+  valor: number;
+}
+
+// Retornando a lista de nomes puros (restaurada para uso nos cálculos de complexidade O(N))
+export const nomes: string[] = [
+  "Ana", "Carlos", "Alice", "Beatriz", "Ana", 
+  "Daniela", "Alice", "Eduardo", "Beatriz", "Ana", 
+  "Gabriel", "Helena", "Alice", "Igor", "Julia"
+];
+
+export const nomesObjetos: Pessoa[] = [
   { nome: "Ana", idade: 20, id: 1 },
   { nome: "Carlos", idade: 25, id: 2 },
   { nome: "Alice", idade: 30, id: 3 },
@@ -16,7 +40,7 @@ export const nomesObjetos = [
   { nome: "Julia", idade: 21, id: 15 }
 ];
 
-export const numerosObjetos = [
+export const numerosObjetos: Financeiro[] = [
   { valor: 45, id: 1 },
   { valor: 12, id: 2 },
   { valor: 89, id: 3 },

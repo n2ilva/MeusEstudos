@@ -1,68 +1,91 @@
+/**
+ * ArreyMap.ts
+ * Demonstra as diferenças analíticas entre o uso de Array primitivo e o objeto Map
+ * em cenários de agrupamento e contagem, focando no ganho de Performance (Big O).
+ */
 
-import { nomesObjetos, numerosObjetos } from "./listaArrey.js";
+import { nomes, nomesObjetos, numerosObjetos } from "./listaArrey.js";
 
-/*
-//Filter para achar nomes duplicados (Modo Simples)
+// =========================================================================
+// 1. Abordagem Quadrática O(N^2) vs Abordagem Linear O(N) para Duplicatas
+// =========================================================================
 
-const nomesDuplicados = nomes.filter((nome, index) => nomes.indexOf(nome) !== index);
-console.log(nomesDuplicados);
+/**
+ * Filter puro para achar nomes duplicados.
+ * Time Complexity: O(N^2) porque filter percorre O(N) e indexOf percorre a string O(N).
+ * Não escalável para listas com milhões de registros.
+ */
+const acharDuplicatasQuadratico = () => {
+  return nomes.filter((nome, index) => nomes.indexOf(nome) !== index);
+};
+console.log("Duplicatas O(N^2):", acharDuplicatasQuadratico());
 
-//Usando Map para achar nomes duplicados (Modo mais robusto)
+/**
+ * Uso de Map como Hash Table/Dicionário para contabilizar ocorrências.
+ * Time Complexity da inserção e busca num Map: O(1) na média.
+ * Time Complexity global: O(N) porque passamos no array 1 vez só.
+ */
+const criarTabelaDeFrequencia = () => {
+  const mapaDeFrequencia = new Map<string, number>();
 
-const nomesDuplicadosMap = new Map();
-
-for (const nome of nomes) {
-  if (nomesDuplicadosMap.has(nome)) {
-    nomesDuplicadosMap.set(nome, nomesDuplicadosMap.get(nome) + 1);
-  } else {
-    nomesDuplicadosMap.set(nome, 1);
+  for (const nome of nomes) {
+    // Se existir, incrementa. Se não, começa no 1.
+    const contagemAtual = mapaDeFrequencia.get(nome) || 0;
+    mapaDeFrequencia.set(nome, contagemAtual + 1);
   }
-}
+  return mapaDeFrequencia;
+};
 
-console.log(nomesDuplicadosMap);
+const nomesDuplicadosMap = criarTabelaDeFrequencia();
+console.log("\nDicionário em memória O(N): ", nomesDuplicadosMap);
 
-// Verificar se um nome existe no Map
-const acharNome = (nome: string) => {
-  if (nomesDuplicadosMap.has(nome)) {
-    return `O nome ${nome} existe no Map`;
-  } else {
-    return `O nome ${nome} não existe no Map`;
-  }
-}
+// =========================================================================
+// 2. Buscas e Verificações em Hash (Tempo Constante)
+// =========================================================================
+
+/**
+ * Funções utilitárias que aproveitam a indexação eficiente (hash) do Map
+ * para buscar se o nome existe e quantas vezes sem precisar iterar a lista.
+ */
+const acharNome = (nome: string): string => {
+  return nomesDuplicadosMap.has(nome) 
+    ? `✅ O nome '${nome}' já foi indexado.` 
+    : `❌ O nome '${nome}' não consta na tabela de hash.`;
+};
+
+const contarNome = (nome: string): string => {
+  const contagem = nomesDuplicadosMap.get(nome);
+  return contagem 
+    ? `📊 O nome '${nome}' aparece ${contagem} vez(es).` 
+    : `📊 O nome '${nome}' está zerado.`;
+};
 
 console.log(acharNome("Ana"));
+console.log(contarNome("Ana"));
 
-// Verificar quantas vezes um nome existe no Map
-const contarNome = (nome: string) => {
-  if (nomesDuplicadosMap.has(nome)) {
-    return `O nome ${nome} existe no Map ${nomesDuplicadosMap.get(nome)} vezes`;
-  } else {
-    return `O nome ${nome} não existe no Map`;
-  }
-}
+// =========================================================================
+// 3. Data Mocking & Data Aggregation (Relational Map)
+// =========================================================================
 
-console.log(contarNome("Ana")); */
+/**
+ * Exemplo prático de agrupamento simulando tabelas relacionais de Banco de Dados.
+ * Cria-se um Hash Map temporário usando o ID como chave (Indexação de BD simulada),
+ * e se mapeia os usuários para embutir os dados financeiros.
+ */
 
-// Juntando Map nomesObjetos e numerosObjetos
+// 1. Cria a Tabela Hash Numérica indexada por ID (O(N) operations)
+const tabelaFinanceira = new Map(numerosObjetos.map(obj => [obj.id, obj]));
 
-// 1. Criar um Map com os números
-const mapaNumeros = new Map(numerosObjetos.map(obj => [obj.id, obj]));
-
-// 2. Criar a lista unificada mapeando os nomes e buscando o valor correspondente
-const listaUnificada = nomesObjetos.map(itemNome => { // itemNome é cada objeto do array nomesObjetos
-  const itemNumero = mapaNumeros.get(itemNome.id); // itemNumero é o objeto correspondente no mapaNumeros
+// 2. Aplica um JOIN "Left Join" local utilizando map e a tabela hash
+// Time Complexity global da operação junta: O(Nx + Ny) vs Array.find que seria O(Nx*Ny)
+const relatorioUnificado = nomesObjetos.map(itemNome => {
+  const itemFinanceiro = tabelaFinanceira.get(itemNome.id);
   
   return {
-    ...itemNome, // Copia todas as propriedades de itemNome
-    valor: itemNumero ? itemNumero.valor : 0 // Adiciona a propriedade valor se existir, senão 0
+    ...itemNome,
+    valor: itemFinanceiro?.valor || 0 // Elvis operator (?.) e fallback
   };
 });
 
-console.log("--- Lista Unificada (Nome + Valor pelo ID) ---"); 
-console.log(listaUnificada.slice(0, 5)); //Mostrar os 5 primeiros resultados
-
-
-
-
-
-  
+console.log("\n--- Relatório Unificado Hash Join (Head: 5 primeiros) ---"); 
+console.table(relatorioUnificado.slice(0, 5)); // Console Table exibe melhor Arrays de Objetos
